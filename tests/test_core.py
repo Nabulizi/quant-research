@@ -26,9 +26,11 @@ class QuantResearchTests(unittest.TestCase):
         self.assertFalse(finite_number(True))
         self.assertFalse(finite_number("1.25"))
 
-    def test_numeric_field_uses_requested_period_then_fallback(self):
+    def test_numeric_field_is_strict_about_the_requested_period(self):
         field = PeriodField(one_year=float("nan"), three_months=0.2, value=0.3)
-        self.assertEqual(numeric_field(field), 0.2)
+        self.assertIsNone(numeric_field(field))
+        self.assertEqual(numeric_field(field, period="three_months"), 0.2)
+        self.assertEqual(numeric_field(PeriodField(one_year=0.1), "one_year"), 0.1)
         self.assertEqual(numeric_field(0.4), 0.4)
         self.assertIsNone(numeric_field(float("nan")))
 

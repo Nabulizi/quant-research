@@ -26,11 +26,14 @@ def finite_number(value: Any) -> bool:
 
 
 def numeric_field(field: Any, period: str = "one_year") -> float | int | None:
-    """Read the first finite value from a QuantConnect-style period field."""
-    for attribute in (period, "one_year", "three_months", "twelve_months", "value"):
-        value = getattr(field, attribute, None)
-        if finite_number(value):
-            return value
+    """Read the requested period from a QuantConnect-style field, else None.
+
+    No cross-period fallback: substituting another period would silently mix
+    horizons in a ranking. Callers wanting a different period pass it explicitly.
+    """
+    value = getattr(field, period, None)
+    if finite_number(value):
+        return value
     return field if finite_number(field) else None
 
 
