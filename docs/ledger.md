@@ -14,6 +14,7 @@ and its Git history.
 | QR-005 | Frozen 2023-2026 extension | `fundamental-screener@b6acbee` | `should-i-trade@84902cc` | Failed after finite-input fix; also inherited return attrition defect | FAILED; METRICS INVALID |
 | QR-006 | Sector, size, beta, and benchmark attribution | `fundamental-screener@73dd526` | `should-i-trade@80524fb` | Exposed material NaN bug; return metrics inherited attrition defect | DIAGNOSTIC ONLY |
 | QR-007 | Corrected quality/value rerun | Existing specs; sanitation-only fix | `should-i-trade@fba1cc2` | Did not fix held-name attrition in synthetic returns | INVALID; QV50/100 UNPROVEN AND CLOSED |
+| QR-D01 | Diagnostic: synthetic books resolve every holding via price or terminal event; retention through universe removal; buggy-accounting positive control | Criteria P1-P3 in file header | `quantconnect/diagnostics/synthetic_terminal_returns.py` | Awaiting QC Cloud run; record backtest ID here | PENDING - GATES QR-008 |
 
 Authoritative historical verdict: `fundamental-screener@bd73f38`.
 
