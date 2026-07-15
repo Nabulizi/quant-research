@@ -20,6 +20,8 @@ and its Git history.
 
 | QR-D02b | Diagnostic: field-scale spot check for QR-008 precondition P-A (QC debug truncation hid QR-D02's SAMPLE values) | Bands from filed financials in file header | `quantconnect/diagnostics/field_scale_sample.py` | QC `25531cd2a814d48f607ac6a472f7b094` (2026-07-14), snapshot 2015-06-01: D/E and interest coverage are raw ratios (AAPL 0.34/140.3, KO 1.47/20.3, T 1.12/3.76, GE 3.24/2.80, GOOGL 0.048/171.9 -- all in band); div_yld and fcf_yld are fractions (AAPL 0.0148/0.0831, KO 0.0304); non-payers AMZN/GOOGL return div_yld=None, so the missing->0.0 non-payer rule is correct and the AAPL Jan-2005 0.15% reading was a rare stale artifact outside the 2011+ window; QC keeps extreme positive P/Es (AMZN 826.8) rather than nulling them, handled by the frozen scorer's >0-else-missing rule and <=1000 sanitize bound | P-A SATISFIED - NO FIELD-MAP AMENDMENT |
 
+| QR-008 | Shipped Strength/Risk v5 composite (`fundamental-screener@0fa9049`), Strong-tier EW portfolio vs hold-random controls and EW-top-100 | `docs/preregistrations/QR-008-strength-risk-v5.md` (DRAFT committed `50a94d1`; P-A satisfied `8a452a2`) | `experiments/QR-008-strength-risk-v5/` | Awaiting: P-B/P-C checklist, DRAFT removal, then one full-period run; record QC backtest ID here | PENDING - DO NOT RUN FULL PERIOD WHILE DRAFT |
+
 Authoritative historical verdict: `fundamental-screener@bd73f38`.
 
 Methodology audit note (2026-07-11): Tests 003-006 calculate each prior synthetic
@@ -33,5 +35,5 @@ it.
 
 ## Next identifier
 
-`QR-008` is reserved for the next independently motivated hypothesis. It has not
-been preregistered or implemented.
+`QR-009` is the next free identifier. `QR-008` is preregistered (draft) and
+implemented but not yet run.
