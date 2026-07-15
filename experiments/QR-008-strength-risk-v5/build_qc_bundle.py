@@ -68,8 +68,8 @@ def main():
         capture_output=True, text=True, check=True,
     ).stdout.strip()
     parts = [
-        f"# GENERATED minified QR-008 bundle (quant-research@{commit}); edit only\n"
-        "# SMOKE: True = smoke run to 2011-06-30, False = frozen full run.\n",
+        f"# GENERATED QR-008 bundle (quant-research@{commit}); edit only SMOKE:\n"
+        "# True = smoke to 2011-06-30, False = frozen full run.\n",
         "from AlgorithmImports import *\n",
     ]
     for src in SOURCES:

@@ -59,8 +59,12 @@ through 2011-06-30; `False` = full period).
 - **5Y margin:** trailing mean of up to 60 monthly `operation_margin.one_year`
   readings (accumulated from 2006 for every name in the fundamentals feed,
   not only top-500 members); missing until 36 readings exist.
-- **Entry rule:** a target with no valid price at execution is not entered
-  that month (counted in `entry_skips`). This governs entries only; exits
+- **Entry rule:** entry prices are the latest adjusted daily close from the
+  history frame (for retained names this equals the security's price at the
+  step time; a brand-new daily-resolution subscription has no live bar until
+  end of day, so the close is the only uniform, lookahead-free basis). A
+  target with no close at all is not entered that month (counted in
+  `entry_skips`). This governs entries only; exits
   always follow the QR-D01 terminal-return rule — a held name that resolves
   neither by price nor by terminal event voids that book-month (`gross=None`),
   which makes the affected window INVALID rather than shrinking the mean.

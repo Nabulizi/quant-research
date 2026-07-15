@@ -102,6 +102,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
         self._records = []            # per-step coverage/breadth/holdings
         self._spy_series = []
         self._spy_prev = None
+        self._entry_px = {}
         self._entry_skips = 0
         self.debug(f"QR-008 start; industry map codes: {resolved_codes()}")
 
@@ -239,12 +240,16 @@ class QR008StrengthRiskV5(QCAlgorithm):
         self._records.append(record)
         if self.time.month == 1:
             cand = self._books["cand"]
-            self.debug(f"HB {self._dates[-1]} months={len(cand['gross'])} "
-                       f"breadth={breadth} invalid={cand['invalid']} "
-                       f"skips={self._entry_skips}")
+            self.debug(f"HB {self._dates[-1]} m={len(cand['gross'])} "
+                       f"b={breadth} inv={cand['invalid']} "
+                       f"sk={self._entry_skips}")
 
     def _score_universe(self):
         stats = self._price_stats(self._u_eligible)
+        # Entry basis: latest adjusted daily close. Identical to sec.price for
+        # retained names at the step time; the only price a new daily-res
+        # subscription has (its first live bar arrives at end of day).
+        self._entry_px = {s: t[2] for s, t in stats.items() if t[2] is not None}
         strong = []
         miss = {k: 0 for k in MISS_FIELDS}
         n_insufficient = 0
@@ -254,7 +259,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
             row = self._pending.get(sym)
             if row is None:
                 continue
-            row["ytdReturn"], row["rangePosition"] = stats.get(sym, (None, None))
+            row["ytdReturn"], row["rangePosition"], _ = stats.get(sym, (None, None, None))
             for k in MISS_FIELDS:
                 if row.get(k) is None:
                     miss[k] += 1
@@ -285,7 +290,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
         lookups: QC's PandasMapper KeyError for absent symbols (e.g. broken
         factor files) proved uncatchable in the cloud runtime. A symbol
         without history stays (None, None) -- missing data to the scorer."""
-        out = {s: (None, None) for s in symbols}
+        out = {s: (None, None, None) for s in symbols}
         try:
             df = self.history(list(symbols), HISTORY_BARS, Resolution.DAILY)
             if df is None or len(df) == 0 or "close" not in df:
@@ -310,11 +315,11 @@ class QR008StrengthRiskV5(QCAlgorithm):
                         else:
                             break
                     ytd = (last / base - 1) * 100.0 if base is not None and base > 0 else None
-                    out[key] = (ytd, range_pos)
+                    out[key] = (ytd, range_pos, last)
                 except Exception:
                     continue
         except Exception as err:
-            self.debug(f"HISTORY-ERR {self.time.date()} {err}")
+            self.debug(f"HERR {self.time.date()} {err}")
         return out
 
     # ---- synthetic books ----
@@ -348,7 +353,9 @@ class QR008StrengthRiskV5(QCAlgorithm):
         entered = []
         entry = {}
         for sym in targets:
-            p = self._price(sym)
+            p = self._entry_px.get(sym)
+            if p is None:
+                p = self._price(sym)
             if p is None:
                 self._entry_skips += 1
                 continue
@@ -380,7 +387,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
 
     def on_end_of_algorithm(self):
         if not self._books or not self._books["cand"]["gross"]:
-            self.debug("QR-008: no evaluated months; nothing to report")
+            self.debug("no evaluated months")
             return
         n_months = len(self._books["cand"]["gross"])
         month_year = [int(d[:4]) for d in self._dates[:n_months]]
