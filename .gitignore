@@ -9,3 +9,6 @@ __pycache__/
 .ruff_cache/
 artifacts/raw/
 
+
+# Claude Code session tooling state, not research record
+.claude/
