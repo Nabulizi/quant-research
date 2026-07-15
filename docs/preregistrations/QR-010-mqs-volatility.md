@@ -1,8 +1,9 @@
 # QR-010: Market Quality Score as a forward-volatility gauge
 
-Status: DRAFT
+Status: FROZEN (2026-07-15)
 
-Do not run the full-period test until this file is complete and committed.
+All preconditions satisfied (bottom section). One full run only; the result
+is final per the interpretation rules.
 Unlike QR-008/009 this experiment runs locally in the `should-i-trade`
 repository (Yahoo daily data, its own replay engine); the operational record
 stays in this ledger.
@@ -31,7 +32,7 @@ stays in this ledger.
 - **Engine and data:** the `should-i-trade` replay engine (`backtest.py`
   machinery: same alignment, warmup, and safety overrides), Yahoo daily
   data, `ANALYSIS_START = 2005-01-01`. Scoring engine frozen at the
-  `should-i-trade` main-branch commit recorded at freeze time ([FREEZE]).
+  `should-i-trade` main-branch commit `90d7b67`.
 - **Signal:** the shipped composite `total` computed at the close of day
   `i`, exactly as `score_day` replays it.
 - **Outcome (primary):** forward realized volatility `RV21(i)` = annualized
@@ -84,19 +85,26 @@ exceeds the top quintile's. Both parts must hold; no other path to PASS.
 
 ## Preconditions for removing DRAFT
 
-- **P-A (information timing):** verify `score_day(i)` consumes data only
-  through the close of day `i` (no lookahead into the forward window);
-  record the check.
-- **P-B (implementation):** the analysis script committed to
-  `should-i-trade` implementing exactly this spec, reviewed against it.
-- **P-C (freeze pin):** record the `should-i-trade` main commit hash that
-  freezes the scoring engine, and run the parity of replay vs live scoring
-  that repo already maintains.
+- **P-A (information timing):** SATISFIED (2026-07-15). Code audit: every
+  access in `score_day(i)` is bounded at index i (`_hist` slices [lo:i+1],
+  `_quote` reads i and i-1, OHLCV window [lo:i+1]); forward data appears
+  only as outcomes in `run()`. Known conventional caveat: Yahoo adjusted
+  closes embed adjustment factors known at download time (affects levels,
+  not adjacent-day returns).
+- **P-B (implementation):** SATISFIED. `backtest_vol.py` at
+  `should-i-trade@90d7b67`; smoke run verified machinery on 2005-2006
+  counts only (503 rows, 24 blocks, VIX fully populated) without computing
+  criterion statistics. Repo test suite green (50 tests).
+- **P-C (freeze pin):** SATISFIED. Scoring engine frozen at
+  `should-i-trade@90d7b67` (main; includes PR #67). Replay-vs-live parity
+  is enforced by that repo's committed backtest test suite, green at the
+  same commit.
 
 ## Reproducibility record
 
-- Preregistration commit:
-- should-i-trade frozen commit:
-- Implementation commit:
+- Preregistration commit: draft `04bd1f5`; freeze commit recorded in the
+  QR-010 ledger row
+- should-i-trade frozen commit: `90d7b67`
+- Implementation commit: `90d7b67` (`backtest_vol.py`)
 - Result artifact or log:
 - Final verdict commit:
