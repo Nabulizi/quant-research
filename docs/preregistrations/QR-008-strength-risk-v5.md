@@ -163,7 +163,11 @@ primary criterion.
 - Implementation commit: `df1dd87`
 - Smoke backtests (machinery only, 2011-H1): `d3421d6ab5b1f2f849796a879f46d9d5`,
   `035c34f2f09b975b526b6aa9ea9dbf00`
-- QuantConnect project/backtest ID:
+- QuantConnect project/backtest ID: `9bb76ea828c3f4e8575e097a8b973ca3` (valid
+  full run, 2026-07-15); `9b16324b3d852165bd74f7d84e7d17cf` (INVALID,
+  duplicate-symbol crash, dedupe fix `cc6c6cb`, spec unchanged)
 - Random seed base: QR008 (seeds 0-99)
-- Result artifact or log:
-- Final verdict commit:
+- Result artifact or log: `results/QR-008-strength-risk-v5/` + ObjectStore
+  key `qr008/results.json`
+- Final verdict commit: the commit adding `results/QR-008-strength-risk-v5/`
+  (PASS on the primary criterion; audit pending)

@@ -1,0 +1,53 @@
+{
+  "experiment": "QR-008",
+  "hypothesis": "Shipped Strength/Risk v5 composite, Strong-tier EW portfolio",
+  "scoring": {
+    "source": "fundamental-screener@0fa9049 lib/scoring.ts",
+    "scoring_version": 5,
+    "python_port": "quant_research/scoring_v5.py",
+    "parity": "tests/test_scoring_v5.py, 37/37 golden fixtures exact"
+  },
+  "commits": {
+    "preregistration_draft": "50a94d1",
+    "preregistration_frozen": "d8419d5",
+    "implementation": "cc6c6cb"
+  },
+  "quantconnect": {
+    "gate_diagnostics": {
+      "QR-D01_terminal_returns": "aa4dac148c22053a876a52a68d06ce5a",
+      "QR-D02_field_coverage": "f60d0f24b132ab8552716b6625eaad60",
+      "QR-D02b_field_scales": "25531cd2a814d48f607ac6a472f7b094"
+    },
+    "smoke_runs": [
+      "d3421d6ab5b1f2f849796a879f46d9d5",
+      "035c34f2f09b975b526b6aa9ea9dbf00"
+    ],
+    "invalid_full_run": "9b16324b3d852165bd74f7d84e7d17cf",
+    "valid_full_run": "9bb76ea828c3f4e8575e097a8b973ca3",
+    "series_artifact": "ObjectStore key qr008/results.json"
+  },
+  "spec": {
+    "warmup": "2006-01-01..2010-12-31",
+    "primary_window": "2011-01-01..2022-12-31",
+    "pseudo_oos": "2023-01-01..2026-06-30 (previously viewed)",
+    "universe": "top 500 by market cap, price > $5, monthly, deduped",
+    "portfolio": "long-only EW all Strong-tier, monthly; <15 hold all; 0 hold cash",
+    "costs_bps_per_side": {"base": 10, "stress": 20},
+    "controls": {"count": 100, "type": "hold-random breadth-matched", "seed_base": "QR008", "seeds": "0-99"},
+    "benchmarks": ["EW-universe", "EW-top-100", "SPY"]
+  },
+  "result": {
+    "primary_verdict": "PASS",
+    "candidate_net_sharpe_2011_2022": 1.044,
+    "controls_p75_net_sharpe": 0.791,
+    "ew_top100_net_sharpe": 0.815,
+    "candidate_2x_cost_sharpe": 1.011,
+    "candidate_cagr": 0.1497,
+    "candidate_maxdd": -0.189,
+    "months": 144,
+    "invalid_book_months": 0,
+    "controls_dropped": 0,
+    "pseudo_oos_note": "candidate 1.129 Sharpe lags EW-top-100 1.433 and SPY 1.522 in 2023-2026"
+  },
+  "status": "PASS (primary) - audit pending before shadow observation"
+}
