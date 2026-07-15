@@ -1,4 +1,4 @@
-# GENERATED QR-008 bundle (quant-research@ad32188); edit only SMOKE:
+# GENERATED QR-008 bundle (quant-research@d8419d5); edit only SMOKE:
 # True = smoke to 2011-06-30, False = frozen full run.
 from AlgorithmImports import *
 import math
