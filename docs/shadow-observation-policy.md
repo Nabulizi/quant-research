@@ -1,6 +1,10 @@
 # Shadow observation policy
 
-Adopted 2026-07-15. First subject: QR-008 (the only audited PASS).
+Adopted 2026-07-15. Subjects: QR-008 (large-cap, audited PASS) and QR-009
+(small-cap band, audited PASS; added 2026-07-15). Each subject keeps its own
+monthly picks file and log under its results directory; the rules below apply
+to both identically, with QR-009's fidelity envelope being breadth 85-205 and
+turnover ~21%/month.
 
 ## What shadow observation is
 
