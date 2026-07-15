@@ -1,10 +1,10 @@
 # QR-008: Shipped Strength/Risk v5 composite, Strong-tier portfolio
 
-Status: DRAFT
+Status: FROZEN (2026-07-14)
 
-Do not run the full-period backtest until this file is complete and committed.
-The DRAFT marker may be removed only after the three preconditions at the
-bottom are satisfied.
+All three preconditions are satisfied (see the bottom section). The full
+historical test may run exactly once against this specification; the result
+is final per the interpretation rules.
 
 ## Claim and mechanism
 
@@ -54,7 +54,10 @@ bottom are satisfied.
 - **Signal date:** First trading day of each month; fundamentals as delivered
   by QC universe selection that morning.
 - **Execution date:** Same day, 90 minutes after market open (QR-D01
-  schedule), synthetic book rebalanced at observed prices.
+  schedule), synthetic book rebalanced at the latest adjusted daily close
+  observable at that time (for daily-resolution data, the prior session's
+  close — the identical basis for new and retained holdings; see the
+  experiment README conventions).
 - **Signal:** Score every universe member with `quant_research/scoring_v5.py`
   (parity-locked to `fundamental-screener@0fa9049`, SCORING_VERSION=5).
   Portfolio holds the "strong" tier. Field map (QC -> scorer input):
@@ -137,23 +140,29 @@ primary criterion.
   scale error discovered post-run). Fix the defect and rerun the exact frozen
   specification; record both runs in the ledger.
 
-## Preconditions for removing DRAFT
+## Preconditions for removing DRAFT (all satisfied 2026-07-14)
 
 - **P-A (field scales):** SATISFIED by QR-D02b
   (QC `25531cd2a814d48f607ac6a472f7b094`, see ledger): debtToEquity and
   interestCoverage are raw ratios (no transform); dividend and FCF yields are
   fractions (x100 as mapped); non-payers return None, validating the
   missing -> 0.0 non-payer rule. No field-map amendment required.
-- **P-B (industry map):** Commit the MorningStar code table implementing the
-  named buckets above to the experiment directory.
-- **P-C (parity):** `python3 -m unittest tests.test_scoring_v5` green at the
-  implementation commit, against fixtures regenerated from
-  `fundamental-screener@0fa9049` or a commit with identical scoring.
+- **P-B (industry map):** SATISFIED. `experiments/QR-008-strength-risk-v5/industry_map.py`
+  resolved on QC and logged its code table (fin=103, reit=104,
+  cyc_sec=[101,309], cyc_grp=[10200,31130],
+  cyc_ind=[10230010,31040010,31080020,31080040]) in smoke backtests
+  `d3421d6ab5b1f2f849796a879f46d9d5` and `035c34f2f09b975b526b6aa9ea9dbf00`.
+- **P-C (parity):** SATISFIED. `python3 -m unittest tests.test_scoring_v5`
+  green (37/37 exact) at implementation commit `df1dd87`, fixtures generated
+  from `fundamental-screener@0fa9049` (SCORING_VERSION=5).
 
 ## Reproducibility record
 
-- Preregistration commit:
-- Implementation commit:
+- Preregistration commit: draft `50a94d1`; freeze commit recorded in the
+  ledger row for QR-008
+- Implementation commit: `df1dd87`
+- Smoke backtests (machinery only, 2011-H1): `d3421d6ab5b1f2f849796a879f46d9d5`,
+  `035c34f2f09b975b526b6aa9ea9dbf00`
 - QuantConnect project/backtest ID:
 - Random seed base: QR008 (seeds 0-99)
 - Result artifact or log:
