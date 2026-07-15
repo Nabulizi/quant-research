@@ -48,14 +48,36 @@ Candidate 0.711 / 10.51% CAGR vs band EW-top-100 0.654 / 9.78% and IWM
 0.711 / 12.81%; SPY 1.522 / 19.29% (n=39). Within-band edge roughly holds;
 everything small trails SPY.
 
-## Audit status (required before any promotion)
+## Audit (complete 2026-07-15; `audit.py` over `audit_payload.json`)
 
-Series in ObjectStore key `qr009/results.json`; export via
-`experiments/QR-009-smallcap-strength-risk-v5/audit_export_backtest.py`
-(debug-chunk method; web download tier-gated). Outstanding: beta/alpha vs
-band EW, SPY, and IWM; full control distribution; turnover and cost drag at
-25 bps; single-period dependence check (2021); insufficient-data share of
-the band; bucket concentration.
+Series exported via QC backtest `0e7faac06171da3d2038fb47b9b7eae3`;
+verdict Sharpe cross-checks exactly (0.782). Reproduce: `python3 audit.py`.
+
+- **The decisive decomposition:** vs its band, alpha **+3.70%/yr (t=3.37)**,
+  beta 0.907, R2 0.954; vs IWM, alpha **+4.91%/yr (t=3.54)**. vs SPY, beta
+  1.107 and alpha **0.08%/yr (t=0.04)** -- i.e. genuine within-band selection
+  skill, but ZERO S&P-relative alpha: everything above SPY-scale returns is
+  small-cap asset-class exposure, which did not pay this era.
+- **Controls:** beats ALL 100 (distribution 0.510-0.673, p75 0.624).
+- **Not single-period-carried:** excluding 2021 entirely, Sharpe 0.696
+  (still above both preregistered thresholds) and band alpha +2.83%/yr
+  (t=2.71). Subperiod alphas positive throughout.
+- **Not sector-carried:** Diversified 69-86%/yr; cyclicals peak 21% (2022);
+  REITs peak 15%; banks ~0 (band financials mostly tier Weak/neutralized).
+- **Turnover/costs:** 21.3%/month one-way; 1.28%/yr drag at 25 bps
+  (2.6%/yr at stress -- consistent with the 0.709 stress Sharpe).
+- **Universe integrity:** dollar-volume floor excluded ~51 names/month
+  (9,362 cumulative), matching QR-D03's estimate; insufficient-data rows
+  28-84 of the band (the coverage floor bites harder down-cap, as
+  preregistered); entry skips 216 over 15 years.
+- **Pseudo-OOS:** band alpha +0.35%/yr (t=0.20) -- neutral within the band,
+  same pattern as QR-008; vs SPY -8.8%/yr (t=-1.64, n.s.) = the size
+  headwind, not stock selection.
+
+All preregistered checks pass. Eligible for shadow observation alongside
+QR-008. Scope sentence for the evidence registry: within-band selection
+alpha confirmed; no S&P-relative alpha -- holding this strategy is a
+small-cap allocation decision plus selection, not a market-beating machine.
 
 ## Interpretation per the prereg
 
