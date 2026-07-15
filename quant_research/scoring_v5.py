@@ -55,21 +55,6 @@ TRAP_CHEAP_FCF_YIELD = 8
 _JS_MIN_VALUE = 5e-324
 _JS_MAX_VALUE = 1.7976931348623157e308
 
-CRITERION_KEYS = [
-    "earningsQuality",
-    "leverage",
-    "revenueGrowth",
-    "revenueAcceleration",
-    "fcfYieldLevel",
-    "marginInflection",
-    "peCompression",
-    "valuation",
-    "dividendCoverage",
-    "pricePosition",
-    "ytdMomentum",
-    "dividendYield",
-]
-
 CRITERION_WEIGHT = {
     "earningsQuality": 3,
     "leverage": 3,
@@ -84,6 +69,9 @@ CRITERION_WEIGHT = {
     "ytdMomentum": 1,
     "dividendYield": 1,
 }
+
+# Iteration order matches the TS CRITERION_KEYS (dicts preserve insertion order).
+CRITERION_KEYS = list(CRITERION_WEIGHT)
 
 _CYCLICAL_PATTERNS = [
     r"semiconductor",

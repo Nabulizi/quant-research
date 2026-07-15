@@ -8,6 +8,7 @@ Writes qc_bundle_main.py next to this script. Regenerate after ANY source
 change; never edit the bundle by hand (except flipping SMOKE before pasting).
 """
 
+import ast
 import subprocess
 from pathlib import Path
 
@@ -30,19 +31,45 @@ DROP_PREFIXES = (
 )
 
 
+def _minify(source: str) -> str:
+    """Drop comments, docstrings, signature annotations; shrink indents to one
+    space per level. Behavior unchanged; QC caps a pasted file at 32000 chars.
+    Class-level AnnAssign fields are kept (dataclasses need them)."""
+    tree = ast.parse(source)
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            body = node.body
+            if (body and isinstance(body[0], ast.Expr)
+                    and isinstance(body[0].value, ast.Constant)
+                    and isinstance(body[0].value.value, str)):
+                body.pop(0)
+                if not body:
+                    body.append(ast.Pass())
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            node.returns = None
+            args = node.args
+            for arg in args.args + args.posonlyargs + args.kwonlyargs:
+                arg.annotation = None
+            if args.vararg:
+                args.vararg.annotation = None
+            if args.kwarg:
+                args.kwarg.annotation = None
+    lines = []
+    for line in ast.unparse(tree).splitlines():
+        stripped = line.lstrip(" ")
+        depth = (len(line) - len(stripped)) // 4
+        lines.append(" " * depth + stripped)
+    return "\n".join(lines)
+
+
 def main():
     commit = subprocess.run(
         ["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
         capture_output=True, text=True, check=True,
     ).stdout.strip()
     parts = [
-        "# GENERATED single-file bundle for QR-008 -- do not edit by hand.\n"
-        f"# Built by build_qc_bundle.py from quant-research@{commit}.\n"
-        "# Sources: quant_research/core.py, quant_research/scoring_v5.py,\n"
-        "#          experiments/QR-008-strength-risk-v5/{industry_map,main}.py\n"
-        "# Before pasting: set SMOKE = True for the P-B smoke run through\n"
-        "# 2011-06-30; SMOKE = False only for the frozen full-period run.\n",
-        "from __future__ import annotations\n",
+        f"# GENERATED minified QR-008 bundle (quant-research@{commit}); edit only\n"
+        "# SMOKE: True = smoke run to 2011-06-30, False = frozen full run.\n",
         "from AlgorithmImports import *\n",
     ]
     for src in SOURCES:
@@ -50,9 +77,11 @@ def main():
             line for line in src.read_text().splitlines(keepends=True)
             if not line.startswith(DROP_PREFIXES)
         )
-        parts.append(f"\n\n# ===== {src.relative_to(ROOT)} =====\n{body}")
+        parts.append(_minify(body) + "\n")
     OUT.write_text("".join(parts))
-    print(f"wrote {OUT} ({OUT.stat().st_size} bytes) from {commit}")
+    size = OUT.stat().st_size
+    print(f"wrote {OUT} ({size} chars) from {commit}"
+          + ("" if size <= 32000 else "  !! OVER the 32000-char QC cap"))
 
 
 if __name__ == "__main__":

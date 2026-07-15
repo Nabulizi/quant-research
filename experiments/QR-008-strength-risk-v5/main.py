@@ -56,12 +56,9 @@ MARGIN_MIN_OBS = 36
 MARGIN_WINDOW = 60
 HISTORY_BARS = 260
 
-MISS_FIELDS = [
-    "trailingPE", "forwardPE", "fcfYieldPercent", "evToEbitda",
-    "revenueGrowthTTM", "revenueGrowthQuarterly", "operatingMarginTTM",
-    "operatingMargin5Y", "interestCoverage", "debtToEquity",
-    "ytdReturn", "rangePosition",
-]
+MISS_FIELDS = ("trailingPE forwardPE fcfYieldPercent evToEbitda revenueGrowthTTM "
+               "revenueGrowthQuarterly operatingMarginTTM operatingMargin5Y "
+               "interestCoverage debtToEquity ytdReturn rangePosition").split()
 
 SUBPERIODS = [(2011, 2015), (2016, 2019), (2020, 2022)]
 
@@ -474,5 +471,4 @@ class QR008StrengthRiskV5(QCAlgorithm):
             "entry_skips": self._entry_skips,
         }
         self.object_store.save("qr008/results.json", json.dumps(payload))
-        self.debug("QR-008 series saved to ObjectStore key qr008/results.json; "
-                   "record the backtest ID in docs/ledger.md")
+        self.debug("saved qr008/results.json; record backtest ID in ledger")

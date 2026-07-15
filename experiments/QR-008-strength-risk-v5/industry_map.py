@@ -38,26 +38,26 @@ def _resolve(enum_cls, candidates):
     )
 
 
-SECTOR_FINANCIAL = _resolve(MorningstarSectorCode, ["FINANCIAL_SERVICES", "FinancialServices"])
-SECTOR_REAL_ESTATE = _resolve(MorningstarSectorCode, ["REAL_ESTATE", "RealEstate"])
+SECTOR_FINANCIAL = _resolve(MorningstarSectorCode, ["FINANCIAL_SERVICES"])
+SECTOR_REAL_ESTATE = _resolve(MorningstarSectorCode, ["REAL_ESTATE"])
 
 CYCLICAL_SECTORS = {
-    _resolve(MorningstarSectorCode, ["BASIC_MATERIALS", "BasicMaterials"]),
-    _resolve(MorningstarSectorCode, ["ENERGY", "Energy"]),
+    _resolve(MorningstarSectorCode, ["BASIC_MATERIALS"]),
+    _resolve(MorningstarSectorCode, ["ENERGY"]),
 }
 
 CYCLICAL_INDUSTRY_GROUPS = {
-    _resolve(MorningstarIndustryGroupCode, ["SEMICONDUCTORS", "Semiconductors"]),
-    _resolve(MorningstarIndustryGroupCode, ["VEHICLES_AND_PARTS", "VehiclesAndParts"]),
+    _resolve(MorningstarIndustryGroupCode, ["SEMICONDUCTORS"]),
+    _resolve(MorningstarIndustryGroupCode, ["VEHICLES_AND_PARTS"]),
 }
 
 CYCLICAL_INDUSTRIES = {
-    _resolve(MorningstarIndustryCode, ["AIRLINES", "Airlines"]),
-    _resolve(MorningstarIndustryCode, ["MARINE_SHIPPING", "MarineShipping", "MARINE", "Marine"]),
+    _resolve(MorningstarIndustryCode, ["AIRLINES"]),
+    _resolve(MorningstarIndustryCode, ["MARINE_SHIPPING", "MARINE"]),
     _resolve(MorningstarIndustryCode, [
-        "ENGINEERING_AND_CONSTRUCTION", "EngineeringConstruction", "ENGINEERING_CONSTRUCTION",
+        "ENGINEERING_AND_CONSTRUCTION", "ENGINEERING_CONSTRUCTION",
     ]),
-    _resolve(MorningstarIndustryCode, ["RESIDENTIAL_CONSTRUCTION", "ResidentialConstruction"]),
+    _resolve(MorningstarIndustryCode, ["RESIDENTIAL_CONSTRUCTION"]),
 }
 
 
