@@ -139,11 +139,11 @@ primary criterion.
 
 ## Preconditions for removing DRAFT
 
-- **P-A (field scales):** From a QC log, verify raw sample values for at least
-  three well-known names against filed financials for: debtToEquity scale,
-  interestCoverage scale, and the trailing-dividend-yield artifact rate on
-  known non-payers (QR-D02 SAMPLE showed AAPL at 0.15% in Jan-2005 while
-  paying no dividend — quantify before accepting the non-payer rule).
+- **P-A (field scales):** SATISFIED by QR-D02b
+  (QC `25531cd2a814d48f607ac6a472f7b094`, see ledger): debtToEquity and
+  interestCoverage are raw ratios (no transform); dividend and FCF yields are
+  fractions (x100 as mapped); non-payers return None, validating the
+  missing -> 0.0 non-payer rule. No field-map amendment required.
 - **P-B (industry map):** Commit the MorningStar code table implementing the
   named buckets above to the experiment directory.
 - **P-C (parity):** `python3 -m unittest tests.test_scoring_v5` green at the
