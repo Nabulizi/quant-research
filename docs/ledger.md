@@ -16,6 +16,8 @@ and its Git history.
 | QR-007 | Corrected quality/value rerun | Existing specs; sanitation-only fix | `should-i-trade@fba1cc2` | Did not fix held-name attrition in synthetic returns | INVALID; QV50/100 UNPROVEN AND CLOSED |
 | QR-D01 | Diagnostic: synthetic books resolve every holding via price or terminal event; retention through universe removal; buggy-accounting positive control | Criteria P1-P3 in file header | `quantconnect/diagnostics/synthetic_terminal_returns.py` | QC `aa4dac148c22053a876a52a68d06ce5a` (2026-07-14): P1 unresolved=0 over 192 months; P2 all five terminals in bounds (LEH 0.14, TWTR 53.78, ATVI 94.42, XLNX 194.87, CELG 108.24); P3 buggy accounting omits 70 holding-months on same data | PASS - QR-008 UNLOCKED |
 
+| QR-D02 | Diagnostic: per-year point-in-time coverage of every QC MorningStar field feeding the screener Strength/Risk v5 scorer (`fundamental-screener@0fa9049`); measurement only, informs the QR-008 window/universe/field map | Measurement-only; no pass/fail | `quantconnect/diagnostics/fundamental_field_coverage.py` | Awaiting QC Cloud run; paste COV table, SAMPLE line, and backtest ID here | PENDING - INFORMS QR-008 PREREG |
+
 Authoritative historical verdict: `fundamental-screener@bd73f38`.
 
 Methodology audit note (2026-07-11): Tests 003-006 calculate each prior synthetic
