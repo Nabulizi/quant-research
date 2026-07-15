@@ -22,6 +22,9 @@ and its Git history.
 
 | QR-008 | Shipped Strength/Risk v5 composite (`fundamental-screener@0fa9049`), Strong-tier EW portfolio vs hold-random controls and EW-top-100 | `docs/preregistrations/QR-008-strength-risk-v5.md` FROZEN at `d8419d5` (draft `50a94d1`, P-A `8a452a2`); P-B/P-C evidence in file | `experiments/QR-008-strength-risk-v5/` at `cc6c6cb`; smoke QC `d3421d6ab5b1f2f849796a879f46d9d5`, `035c34f2f09b975b526b6aa9ea9dbf00` (machinery only) | Run 1 QC `9b16324b3d852165bd74f7d84e7d17cf` INVALID (duplicate-symbol crash 2014-07; dedupe fix `cc6c6cb`, spec unchanged). Valid run QC `9bb76ea828c3f4e8575e097a8b973ca3` (2026-07-15): net Sharpe 1.044 > controls p75 0.791 and > EW-top-100 0.815 over 2011-2022 (n=144, invalid=0, 2x-cost 1.011, MaxDD -18.9% vs -24.1%); beat EW-top-100 all 12 years, edge concentrated in down years. Caution: lags EW-top-100 and SPY in previously-viewed 2023-2026. Audit (2026-07-15): beta 0.957, alpha +3.32%/yr vs SPY (t=2.77) and +4.20%/yr vs EW-universe (t=3.79); beats 100/100 controls; not sector- or subperiod-carried; turnover 20%/mo one-way; pseudo-OOS alpha vs EW-universe ~0 (megacap regime explains the SPY lag). Details `results/QR-008-strength-risk-v5/` | PASS + AUDIT COMPLETE - ELIGIBLE FOR SHADOW OBSERVATION; NOT TRADEABLE |
 
+| QR-D03 | Diagnostic: v5 scorer field coverage + dollar-volume distribution in the small-cap band (ranks 501-1500); pins QR-009 window, liquidity floor, cost model | Measurement-only; no pass/fail | `quantconnect/diagnostics/smallcap_field_coverage.py` | Awaiting QC Cloud run; paste COV/DV tables, SAMPLE line, and backtest ID here | PENDING - INFORMS QR-009 PREREG |
+| QR-009 | Strength/Risk v5 composite in market-cap ranks 501-1500 (capacity-constrained extension of QR-008; signal frozen, universe disjoint) | `docs/preregistrations/QR-009-smallcap-strength-risk-v5.md` (DRAFT; [QR-D03] placeholders open) | Reuses QR-008 implementation with universe/cost/seed changes (P-B diff pending) | Awaiting QR-D03, then DRAFT removal, then one full run | DRAFT - DO NOT RUN |
+
 Authoritative historical verdict: `fundamental-screener@bd73f38`.
 
 Methodology audit note (2026-07-11): Tests 003-006 calculate each prior synthetic
@@ -35,5 +38,5 @@ it.
 
 ## Next identifier
 
-`QR-009` is the next free identifier. `QR-008` is preregistered (draft) and
-implemented but not yet run.
+`QR-010` is the next free identifier. QR-008 is decided (PASS, audited, in
+shadow observation); QR-009 is drafted pending QR-D03.
