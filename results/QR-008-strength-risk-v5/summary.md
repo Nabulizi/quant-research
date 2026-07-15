@@ -43,19 +43,36 @@ Candidate 1.129 Sharpe / 14.01% CAGR vs EW-top-100 1.433 / 17.40% and SPY
 2023, 2024, and 2025. Caution: the historical edge does not show in the
 most recent, mega-cap-dominated regime.
 
-## Audit status (required before shadow observation)
+## Audit (complete 2026-07-15; `audit.py` over `audit_payload.json`)
 
-Machine-readable series: QC Object Store key `qr008/results.json` in the
-backtest's project (download and commit a copy or its checksum here).
-Outstanding preregistered audit items:
+Series exported via QC backtest `d69ef709c90d732d0542fd85a0d370eb`
+(Object Store web download is tier-gated); reassembled payload committed as
+`audit_payload.json`; reproduce with `python3 audit.py`. Verdict Sharpe
+cross-checks exactly (1.044).
 
-- Sector, size, beta, and correlation attribution (the 2022 result implies
-  materially sub-market beta; quantify how much of the Sharpe edge is a
-  low-beta/quality tilt vs selection).
-- Turnover series and cost realism.
-- Control-distribution inspection (candidate vs full 100-control Sharpe
-  distribution, not just p75).
-- Data-exclusion and coverage series review.
+- **Exposure: NOT a low-beta tilt.** Beta 0.957 vs SPY, vol 14.4% vs 14.5%,
+  R2 0.923. Annualized CAPM alpha **+3.32%/yr (t=2.77)** vs SPY and
+  **+4.20%/yr (t=3.79)** vs EW-universe (same names, same accounting). The
+  earlier low-beta hypothesis is refuted; the edge is selection within a
+  fully-invested market-like book.
+- **Controls:** candidate 1.044 exceeds ALL 100 hold-random controls
+  (distribution 0.661-0.867, p75 0.791).
+- **Not sector- or subperiod-carried:** Diversified 67-86% per year,
+  cyclicals 8-28% (peak 2022 = the energy year), banks/REITs <=7%; alpha
+  positive in all three subperiods (2020-2022: +6.66%/yr, t=2.06).
+- **Turnover/costs:** 20.4%/month one-way (~2.4x/yr); base-cost drag
+  0.49%/yr, stress drag ~1%/yr.
+- **Breadth/coverage:** breadth 51-159 (median 98), <15 fallback never
+  triggered; insufficient-data rows 2-17 of 500; last-month missing counts
+  match QR-D02 expectations.
+- **Pseudo-OOS reframed:** 2023-2026 alpha vs EW-universe +0.33%/yr (t=0.19)
+  -- the candidate MATCHED equal weight; the shortfall vs SPY (-2.81%/yr,
+  t=-0.82, insignificant) is the megacap-vs-equal-weight regime, not
+  negative selection. Recent evidence is neutral, not negative.
+
+All preregistered promotion-gate checks pass. The candidate is eligible for
+prospective shadow observation under a policy to be written before any
+observation begins.
 
 ## Interpretation per the prereg
 
