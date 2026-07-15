@@ -1,10 +1,10 @@
 # QR-009: Strength/Risk v5 composite in the small-cap band
 
-Status: DRAFT
+Status: FROZEN (2026-07-15)
 
-Do not run the full-period backtest until this file is complete and committed.
-Placeholders marked `[QR-D03]` are pinned by the QR-D03 diagnostic before the
-DRAFT marker may be removed.
+All preconditions are satisfied (see the bottom section). The full historical
+test may run exactly once against this specification; the result is final per
+the interpretation rules.
 
 ## Claim and mechanism
 
@@ -95,16 +95,19 @@ Robustness checks may veto promotion but cannot rescue the primary criterion.
 - **P-A (small-cap field coverage and liquidity):** SATISFIED by QR-D03
   (QC `2e5f1560537c348342a3e322ad0ab091`, ledger 2026-07-15): window
   2011-2022, floor $2M/day, costs confirmed 25/50 bps.
-- **P-B (implementation reuse):** the experiment reuses QR-008's audited
-  implementation with only the universe filter, cost constants, seed base,
-  and IWM benchmark changed; diff against `experiments/QR-008-strength-risk-v5/`
-  committed and reviewed.
-- **P-C (parity):** scorer parity suite green at the implementation commit.
+- **P-B (implementation reuse):** SATISFIED. Implementation committed at
+  `0fcf09e`; the five deltas vs QR-008's audited code are documented in the
+  experiment README and diff-verifiable. Smoke backtest
+  `6beacf95003b7a57ba6709b0963a6c05` (2011-H1): band constructed, breadth
+  ~120-149, zero entry skips, zero unresolved, IWM reporting.
+- **P-C (parity):** SATISFIED. Parity suite green (37/37) at `0fcf09e`.
 
 ## Reproducibility record
 
-- Preregistration commit:
-- Implementation commit:
+- Preregistration commit: draft `4a73620`, pinned `ff09f3e`; freeze commit
+  recorded in the ledger row for QR-009
+- Implementation commit: `0fcf09e`
+- Smoke backtest (machinery only, 2011-H1): `6beacf95003b7a57ba6709b0963a6c05`
 - QuantConnect project/backtest ID:
 - Random seed base: QR009 (seeds 0-99)
 - Result artifact or log:
