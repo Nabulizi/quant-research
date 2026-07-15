@@ -21,6 +21,10 @@ application; it is not evidence that a signal has historical alpha.
   invalid and the explored family is closed, not validated.
 - The 2023-2026 period has been inspected repeatedly and is no longer a clean
   holdout for new hypotheses.
+- QR-008 (shipped screener Strength/Risk v5, Strong-tier EW) PASSED its
+  preregistered primary criterion and the full audit (selection alpha, not a
+  beta tilt; beats all 100 controls). It is in prospective shadow observation
+  under `shadow-observation-policy.md`.
 - No strategy is approved for paper trading, broker integration, or live capital.
 
 The detailed historical record remains in
