@@ -104,7 +104,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
         self._spy_prev = None
         self._entry_px = {}
         self._entry_skips = 0
-        self.debug(f"QR-008 start; industry map codes: {resolved_codes()}")
+        self.debug(f"QR8 map {resolved_codes()}")
 
     # ---- universe selection: monthly measurement + union retention ----
 
@@ -132,7 +132,17 @@ class QR008StrengthRiskV5(QCAlgorithm):
             return self._universe_cache
 
         rows.sort(key=lambda x: x[0], reverse=True)
-        top = [f for _, f in rows[:TOP_N]]
+        # The feed can emit duplicate symbols (seen 2014-07); books require
+        # unique members, so keep each symbol's highest-cap row only.
+        top = []
+        seen = set()
+        for _, f in rows:
+            if f.symbol in seen:
+                continue
+            seen.add(f.symbol)
+            top.append(f)
+            if len(top) == TOP_N:
+                break
         self._u_eligible = [f.symbol for f in top]
         self._u_top100 = [f.symbol for f in top[:TOP_100]]
         self._pending = {f.symbol: self._row(f) for f in top}
@@ -189,7 +199,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
             if p is None and d.price > 0:
                 p = d.price
             self._terminal[sym] = p
-            self.debug(f"DELISTED {sym.value} {self.time.date()} terminal={p}")
+            self.debug(f"DELIST {sym.value} {p}")
 
     def _price(self, sym):
         try:
@@ -319,7 +329,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
                 except Exception:
                     continue
         except Exception as err:
-            self.debug(f"HERR {self.time.date()} {err}")
+            self.debug(f"HERR {err}")
         return out
 
     # ---- synthetic books ----
@@ -344,7 +354,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
             if p is None:
                 book["invalid"] += 1
                 book["gross"].append(None)
-                self.debug(f"UNRESOLVED {sym.value} {self.time.date()}")
+                self.debug(f"UNRES {sym.value} {self.time.date()}")
                 return
             rets.append(p / book["entry"][sym] - 1)
         book["gross"].append(sum(rets) / len(rets))
@@ -481,4 +491,4 @@ class QR008StrengthRiskV5(QCAlgorithm):
             "entry_skips": self._entry_skips,
         }
         self.object_store.save("qr008/results.json", json.dumps(payload))
-        self.debug("saved qr008/results.json; record backtest ID in ledger")
+        self.debug("saved qr008/results.json")

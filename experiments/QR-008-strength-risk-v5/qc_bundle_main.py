@@ -1,4 +1,4 @@
-# GENERATED QR-008 bundle (quant-research@d8419d5); edit only SMOKE:
+# GENERATED QR-008 bundle (quant-research@0b66bd5); edit only SMOKE:
 # True = smoke to 2011-06-30, False = frozen full run.
 from AlgorithmImports import *
 import math
@@ -368,7 +368,7 @@ CYCLICAL_INDUSTRY_GROUPS = {_resolve(MorningstarIndustryGroupCode, ['SEMICONDUCT
 CYCLICAL_INDUSTRIES = {_resolve(MorningstarIndustryCode, ['AIRLINES']), _resolve(MorningstarIndustryCode, ['MARINE_SHIPPING', 'MARINE']), _resolve(MorningstarIndustryCode, ['ENGINEERING_AND_CONSTRUCTION', 'ENGINEERING_CONSTRUCTION']), _resolve(MorningstarIndustryCode, ['RESIDENTIAL_CONSTRUCTION'])}
 
 def resolved_codes():
- return f'fin={SECTOR_FINANCIAL} reit={SECTOR_REAL_ESTATE} cyc_sec={sorted(CYCLICAL_SECTORS)} cyc_grp={sorted(CYCLICAL_INDUSTRY_GROUPS)} cyc_ind={sorted(CYCLICAL_INDUSTRIES)}'
+ return f'f={SECTOR_FINANCIAL} r={SECTOR_REAL_ESTATE} cs={sorted(CYCLICAL_SECTORS)} cg={sorted(CYCLICAL_INDUSTRY_GROUPS)} ci={sorted(CYCLICAL_INDUSTRIES)}'
 
 def industry_label(fundamental):
  try:
@@ -442,7 +442,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
   self._spy_prev = None
   self._entry_px = {}
   self._entry_skips = 0
-  self.debug(f'QR-008 start; industry map codes: {resolved_codes()}')
+  self.debug(f'QR8 map {resolved_codes()}')
 
  def _select(self, fundamentals):
   if self.time.month == self._sel_month:
@@ -465,7 +465,15 @@ class QR008StrengthRiskV5(QCAlgorithm):
    self._universe_cache = []
    return self._universe_cache
   rows.sort(key=lambda x: x[0], reverse=True)
-  top = [f for (_, f) in rows[:TOP_N]]
+  top = []
+  seen = set()
+  for (_, f) in rows:
+   if f.symbol in seen:
+    continue
+   seen.add(f.symbol)
+   top.append(f)
+   if len(top) == TOP_N:
+    break
   self._u_eligible = [f.symbol for f in top]
   self._u_top100 = [f.symbol for f in top[:TOP_100]]
   self._pending = {f.symbol: self._row(f) for f in top}
@@ -497,7 +505,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
    if p is None and d.price > 0:
     p = d.price
    self._terminal[sym] = p
-   self.debug(f'DELISTED {sym.value} {self.time.date()} terminal={p}')
+   self.debug(f'DELIST {sym.value} {p}')
 
  def _price(self, sym):
   try:
@@ -596,7 +604,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
     except Exception:
      continue
   except Exception as err:
-   self.debug(f'HERR {self.time.date()} {err}')
+   self.debug(f'HERR {err}')
   return out
 
  def _init_books(self):
@@ -619,7 +627,7 @@ class QR008StrengthRiskV5(QCAlgorithm):
    if p is None:
     book['invalid'] += 1
     book['gross'].append(None)
-    self.debug(f'UNRESOLVED {sym.value} {self.time.date()}')
+    self.debug(f'UNRES {sym.value} {self.time.date()}')
     return
    rets.append(p / book['entry'][sym] - 1)
   book['gross'].append(sum(rets) / len(rets))
@@ -731,4 +739,4 @@ class QR008StrengthRiskV5(QCAlgorithm):
    self.debug(f'YR {year} cand={yr(cand_net)} ew100={yr(ew100_net)} ewu={yr(ewu_net)} spy={yr(self._spy_series)} breadth~{avg_b:.0f}')
   payload = {'experiment': 'QR-008', 'scoring_version': 5, 'seed_base': SEED_BASE, 'base_bps': BASE_BPS, 'dates': self._dates, 'spy': self._spy_series, 'books': {name: {'gross': b['gross'], 'to': b['to'], 'invalid': b['invalid']} for (name, b) in self._books.items()}, 'records': self._records, 'entry_skips': self._entry_skips}
   self.object_store.save('qr008/results.json', json.dumps(payload))
-  self.debug('saved qr008/results.json; record backtest ID in ledger')
+  self.debug('saved qr008/results.json')

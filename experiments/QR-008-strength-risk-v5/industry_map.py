@@ -64,9 +64,9 @@ CYCLICAL_INDUSTRIES = {
 def resolved_codes() -> str:
     """One-line code table for the smoke-run log (P-B evidence)."""
     return (
-        f"fin={SECTOR_FINANCIAL} reit={SECTOR_REAL_ESTATE} "
-        f"cyc_sec={sorted(CYCLICAL_SECTORS)} cyc_grp={sorted(CYCLICAL_INDUSTRY_GROUPS)} "
-        f"cyc_ind={sorted(CYCLICAL_INDUSTRIES)}"
+        f"f={SECTOR_FINANCIAL} r={SECTOR_REAL_ESTATE} "
+        f"cs={sorted(CYCLICAL_SECTORS)} cg={sorted(CYCLICAL_INDUSTRY_GROUPS)} "
+        f"ci={sorted(CYCLICAL_INDUSTRIES)}"
     )
 
 
