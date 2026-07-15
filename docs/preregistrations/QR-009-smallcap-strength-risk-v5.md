@@ -26,9 +26,10 @@ DRAFT marker may be removed.
   overlap QR-008's top 500), realistic small-cap costs, and a liquidity
   floor. The signal is unchanged and stays frozen: this is not a tune of
   QR-008 but its capacity-constrained extension. Why institutional capital
-  cannot easily arbitrage it: the band's median daily dollar volume
-  ([QR-D03]) does not absorb institutional position sizes at the observed
-  breadth.
+  cannot easily arbitrage it: the band's median daily dollar volume was
+  ~$6.5M in 2011 (QR-D03, QC `2e5f1560537c348342a3e322ad0ab091`) — at
+  100+ name breadth, institutional position sizes require days of full
+  volume per name, while a small account trades it freely.
 
 ## Frozen specification
 
@@ -37,18 +38,21 @@ DRAFT marker may be removed.
   accounting; scorer via the parity-locked port (`quant_research/scoring_v5.py`,
   fixtures from `fundamental-screener@0fa9049`).
 - **Dates and evidence windows:** warm-up from 2006 for the derived 5Y
-  margin; primary window `[QR-D03: earliest year where every non-neutralized
-  field clears usable coverage, expected >= 2011]` through 2022-12-31;
-  2023-2026 pseudo-out-of-sample, labeled previously viewed.
-- **Universe:** US common equity, finite market cap > 0, price > $5,
-  median-band liquidity floor `[QR-D03: minimum daily dollar volume, chosen
-  so the base cost assumption is defensible]`, deduped, market-cap ranks
-  501-1500 at each monthly selection.
+  margin; primary window 2011-01-01 through 2022-12-31 (QR-D03: forward P/E
+  reaches 92.6% band coverage in 2011; interest coverage 74.9% and outside
+  the v5 coverage denominator, missing = conservative); 2023-2026
+  pseudo-out-of-sample, labeled previously viewed.
+- **Universe:** US common equity, finite market cap > 0, price > $5, deduped,
+  ranked by market cap exactly as QR-008; take ranks 501-1500, then exclude
+  names with daily dollar volume <= $2,000,000 at selection (QR-D03: trims
+  ~p15 of the band early, near nothing later; excluded counts logged). The
+  rank definition keeps the universe disjoint from QR-008's top 500.
 - **Signal/execution/portfolio/missing values:** identical to QR-008's frozen
   spec (same field map, same industry map, same Strong-tier EW rules, same
   latest-observable-close execution basis, same entry/exit rules).
-- **Costs:** 25 bps per side base; 50 bps per side stress. `[QR-D03 may
-  revise UP only, never down, based on the dollar-volume table.]`
+- **Costs:** 25 bps per side base; 50 bps per side stress. Confirmed against
+  the QR-D03 dollar-volume table with the $2M/day floor in place; no upward
+  revision required.
 - **Random controls:** 100 hold-random controls, seed base `QR009`, seeds
   0-99, breadth-matched, drawn from the same monthly band.
 - **Benchmarks:** EW-universe (the 1000-name band), EW-top-100 of the band,
@@ -88,9 +92,9 @@ Robustness checks may veto promotion but cannot rescue the primary criterion.
 
 ## Preconditions for removing DRAFT
 
-- **P-A (small-cap field coverage and liquidity):** run QR-D03
-  (`quantconnect/diagnostics/smallcap_field_coverage.py`), record its COV/DV
-  tables in the ledger, and pin the three `[QR-D03]` placeholders above.
+- **P-A (small-cap field coverage and liquidity):** SATISFIED by QR-D03
+  (QC `2e5f1560537c348342a3e322ad0ab091`, ledger 2026-07-15): window
+  2011-2022, floor $2M/day, costs confirmed 25/50 bps.
 - **P-B (implementation reuse):** the experiment reuses QR-008's audited
   implementation with only the universe filter, cost constants, seed base,
   and IWM benchmark changed; diff against `experiments/QR-008-strength-risk-v5/`
