@@ -106,5 +106,7 @@ exceeds the top quintile's. Both parts must hold; no other path to PASS.
   QR-010 ledger row
 - should-i-trade frozen commit: `90d7b67`
 - Implementation commit: `90d7b67` (`backtest_vol.py`)
-- Result artifact or log:
-- Final verdict commit:
+- Result artifact or log: `results/QR-010-mqs-volatility/` (summary +
+  verbatim run output)
+- Final verdict commit: the commit adding that directory (PASS, wording
+  gated to volatility persistence)

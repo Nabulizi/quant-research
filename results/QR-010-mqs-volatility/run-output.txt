@@ -1,0 +1,12 @@
+QR-010 blocks=256 (2005-01-03 .. 2026-04-17)
+PRIMARY: rho(score,RV21)=-0.440 p=0.00000 bottomQ=24.8% topQ=12.2% -> PASS
+quintile mean RV21 (low->high score): 24.8 16.9 12.2 12.1 12.2
+RV5: rho=-0.562 p=0.00000 bottomQ=26.5% topQ=9.0%
+tails: rho(score,worst-day)=0.268 rho(score,drawdown)=0.259 (positive = higher score, milder tail)
+overlapping view (all 5374 days, no p): rho=-0.470
+subperiod 2005-2010: n=72 rho=-0.549
+subperiod 2011-2015: n=60 rho=-0.461
+subperiod 2016-2019: n=48 rho=-0.195
+subperiod 2020-2026: n=76 rho=-0.365
+BASELINES: rho(VIX,RV21)=0.663 rho(trailRV,RV21)=0.556
+WORDING GATE: consistent with known volatility persistence; no added information beyond VIX/trailing RV demonstrated
