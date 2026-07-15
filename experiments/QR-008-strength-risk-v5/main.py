@@ -279,39 +279,42 @@ class QR008StrengthRiskV5(QCAlgorithm):
 
     def _price_stats(self, symbols):
         """(ytdReturn %, rangePosition) per symbol from adjusted daily closes
-        ending at the prior close (point-in-time at execution)."""
+        ending at the prior close (point-in-time at execution).
+
+        Iterates the returned frame's own symbol groups instead of .loc
+        lookups: QC's PandasMapper KeyError for absent symbols (e.g. broken
+        factor files) proved uncatchable in the cloud runtime. A symbol
+        without history stays (None, None) -- missing data to the scorer."""
         out = {s: (None, None) for s in symbols}
         try:
             df = self.history(list(symbols), HISTORY_BARS, Resolution.DAILY)
+            if df is None or len(df) == 0 or "close" not in df:
+                return out
+            year = self.time.year
+            for key, series in df["close"].groupby(level=0):
+                try:
+                    series = series.droplevel(0)
+                    if len(series) == 0:
+                        continue
+                    values = [float(v) for v in series.values]
+                    last = values[-1]
+                    window = values[-252:]
+                    low, high = min(window), max(window)
+                    range_pos = (last - low) / (high - low) if high > low else None
+                    base = None
+                    for stamp, value in zip(series.index, values):
+                        # Bars are stamped at end time (next midnight); the
+                        # close's calendar day is one tick earlier.
+                        if (stamp - pd.Timedelta(seconds=1)).year < year:
+                            base = float(value)
+                        else:
+                            break
+                    ytd = (last / base - 1) * 100.0 if base is not None and base > 0 else None
+                    out[key] = (ytd, range_pos)
+                except Exception:
+                    continue
         except Exception as err:
             self.debug(f"HISTORY-ERR {self.time.date()} {err}")
-            return out
-        if df is None or len(df) == 0 or "close" not in df:
-            return out
-        closes = df["close"]
-        year = self.time.year
-        for sym in symbols:
-            try:
-                series = closes.loc[sym]
-            except Exception:
-                continue
-            if not hasattr(series, "values") or len(series) == 0:
-                continue
-            values = [float(v) for v in series.values]
-            last = values[-1]
-            window = values[-252:]
-            low, high = min(window), max(window)
-            range_pos = (last - low) / (high - low) if high > low else None
-            base = None
-            for stamp, value in zip(series.index, values):
-                # Daily bars are stamped at end time (next midnight); the
-                # close's calendar day is one tick earlier.
-                if (stamp - pd.Timedelta(seconds=1)).year < year:
-                    base = float(value)
-                else:
-                    break
-            ytd = (last / base - 1) * 100.0 if base is not None and base > 0 else None
-            out[sym] = (ytd, range_pos)
         return out
 
     # ---- synthetic books ----
