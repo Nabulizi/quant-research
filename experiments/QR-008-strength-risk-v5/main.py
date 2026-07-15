@@ -38,6 +38,11 @@ from industry_map import industry_label, resolved_codes
 from scoring_v5 import score_row
 # endregion
 
+# SMOKE = True runs only through 2011-06-30: verifies the industry map
+# resolves (P-B), the field map populates, and the books rebalance. The full
+# frozen run uses SMOKE = False and must not happen while the prereg is DRAFT.
+SMOKE = False
+
 EVAL_START_YEAR = 2011
 PRIMARY_LAST_YEAR = 2022
 TOP_N = 500
@@ -75,7 +80,10 @@ class QR008StrengthRiskV5(QCAlgorithm):
 
     def initialize(self):
         self.set_start_date(2006, 1, 1)
-        self.set_end_date(2026, 6, 30)
+        if SMOKE:
+            self.set_end_date(2011, 6, 30)
+        else:
+            self.set_end_date(2026, 6, 30)
         self.set_cash(100_000)
         self._spy = self.add_equity("SPY", Resolution.DAILY).symbol
         self.universe_settings.resolution = Resolution.DAILY

@@ -14,6 +14,16 @@ Create one QC Cloud project with exactly these four Python files:
 | `scoring_v5.py` | `quant_research/scoring_v5.py` (copy verbatim) |
 | `core.py` | `quant_research/core.py` (copy verbatim) |
 
+### Single-file alternative
+
+If your QC workflow takes one script (no multi-file project), paste
+`qc_bundle_main.py` instead — it is the four files concatenated by
+`build_qc_bundle.py`. Regenerate it (`python3 build_qc_bundle.py` from this
+directory) after any source change and again right before the frozen full run
+so its header records the final commit. Never edit the bundle by hand, with
+one exception: flipping the `SMOKE` flag near the top (`True` = smoke run
+through 2011-06-30; `False` = full period).
+
 ## Run checklist (in order)
 
 1. **P-C (parity):** `python3 -m unittest discover -s tests -v` green at the
