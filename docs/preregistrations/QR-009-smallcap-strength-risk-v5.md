@@ -108,7 +108,10 @@ Robustness checks may veto promotion but cannot rescue the primary criterion.
   recorded in the ledger row for QR-009
 - Implementation commit: `0fcf09e`
 - Smoke backtest (machinery only, 2011-H1): `6beacf95003b7a57ba6709b0963a6c05`
-- QuantConnect project/backtest ID:
+- QuantConnect project/backtest ID: `00e46e0e2ee3804e2eae7e9c7f1a4a99`
+  (valid full run, 2026-07-15, first and only)
 - Random seed base: QR009 (seeds 0-99)
-- Result artifact or log:
-- Final verdict commit:
+- Result artifact or log: `results/QR-009-smallcap-strength-risk-v5/` +
+  ObjectStore key `qr009/results.json`
+- Final verdict commit: the commit adding the results directory (PASS on
+  the primary criterion; audit pending)
