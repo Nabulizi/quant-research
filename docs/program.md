@@ -14,7 +14,9 @@ application; it is not evidence that a signal has historical alpha.
 ## Current state
 
 - The QuantConnect data path passed the delisting, terminal-return, and
-  point-in-time fundamental probes.
+  point-in-time fundamental probes. QR-D01 additionally proved synthetic
+  (order-free) books resolve every holding through delistings, mergers, and
+  universe removal; QR-008 preregistration is unlocked.
 - Naive FCF yield and qv20 are rejected. The synthetic qv50/100 evidence is
   invalid and the explored family is closed, not validated.
 - The 2023-2026 period has been inspected repeatedly and is no longer a clean
